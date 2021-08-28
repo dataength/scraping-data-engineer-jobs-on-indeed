@@ -10,6 +10,7 @@ SEARCH_URL = "https://th.indeed.com/jobs?q=%22data+engineer%22&l=%E0%B8%81%E0%B8
 class MySpider(scrapy.Spider):
     name = "indeed_spider"
     start_urls = [SEARCH_URL,]
+    start = 0
 
     def parse(self, response):
         jobs = []
@@ -30,9 +31,14 @@ class MySpider(scrapy.Spider):
             print(title, company_name, company_location, job_url)
             jobs.append([title, company_name, company_location, job_url])
 
-        with open('jobs.csv', 'w', newline='') as f:
+        with open('jobs.csv', 'a', newline='') as f:
             writer = csv.writer(f)
             writer.writerows(jobs)
+
+        self.start = self.start + 10
+        if self.start < 50:
+            next_page = f"{SEARCH_URL}&start={self.start}"
+            yield response.follow(next_page, self.parse)
 
 
 if __name__ == "__main__":
