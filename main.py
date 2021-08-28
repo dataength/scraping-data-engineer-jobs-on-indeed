@@ -1,3 +1,5 @@
+import csv
+
 import scrapy
 from scrapy.crawler import CrawlerProcess
 
@@ -10,6 +12,8 @@ class MySpider(scrapy.Spider):
     start_urls = [SEARCH_URL,]
 
     def parse(self, response):
+        jobs = []
+
         job_links = response.css("#mosaic-provider-jobcards a")
         for each in job_links:
             if "id" not in each.attrib:
@@ -24,6 +28,11 @@ class MySpider(scrapy.Spider):
             company_location = each.css(".companyLocation::text").get()
 
             print(title, company_name, company_location, job_url)
+            jobs.append([title, company_name, company_location, job_url])
+
+        with open('jobs.csv', 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerows(jobs)
 
 
 if __name__ == "__main__":
