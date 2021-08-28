@@ -9,13 +9,13 @@ python -m venv ENV
 source ENV/bin/activate
 ```
 
-Install packages
+Install packages.
 
 ```sh
 pip install -r requirements.txt
 ```
 
-Run the script
+Run the script.
 
 ```sh
 python main.py
